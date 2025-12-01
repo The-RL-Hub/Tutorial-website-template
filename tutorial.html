@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Markdown-driven tutorial page template with math, code, and a generated sidebar.">
+    <title>Tutorial Template</title>
+    <link rel="stylesheet" href="css/tutorial.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/github.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="Pictures/logo.png" alt="Logo">
+                <span data-page-title>New tutorial</span>
+            </div>
+            <nav>
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="about.html"><i class="fas fa-info-circle"></i> Usage Guide</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <aside class="sidebar">
+            <div class="sidebar-loading">Headings from your Markdown will build the sidebar automatically.</div>
+        </aside>
+    
+        <section class="content">
+            <div class="loading">Pass a Markdown path with <code>?md=content/tutorials/your-file.md</code> to see your content here.</div>
+        </section>
+    </main>
+    
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <footer class="social-footer">
+        <a href="https://github.com/silentdrift" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="mailto:arshiyagharoony@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+    </footer>
+
+    <div class="scroll-top" id="scrollTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <script src="js/mathjax-config.js"></script>
+    <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="js/markdown-callback-loader.js"></script>
+    <script src="js/tutorial.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contentElement = document.querySelector('.content');
+            const sidebarElement = document.querySelector('.sidebar');
+            const titleEl = document.querySelector('[data-page-title]');
+            const params = new URLSearchParams(window.location.search);
+            
+            const markdownPath = params.get('md');
+            const pageTitle = params.get('title') || 'New tutorial';
+            const normalizedPath = markdownPath ? markdownPath.replace(/^\\.\\//, '') : '';
+
+            if (titleEl) {
+                titleEl.textContent = pageTitle;
+            }
+            document.title = `${pageTitle} | Tutorial Template`;
+
+            if (!markdownPath) {
+                contentElement.innerHTML = `
+                    <div class="empty-state">
+                        <h2>Point this page at a Markdown file</h2>
+                        <p>Example: <code>tutorial.html?title=Getting%20Started&md=content/tutorials/getting-started/lesson.md</code></p>
+                        <p>Place your Markdown file under <code>content/tutorials/</code> and images next to it.</p>
+                    </div>
+                `;
+                if (sidebarElement) {
+                    sidebarElement.innerHTML = '<div class="sidebar-loading">Add headings (H1-H3) to your Markdown to populate the sidebar.</div>';
+                }
+                return;
+            }
+            
+            const paths = [
+                normalizedPath,
+                `/${normalizedPath}`,
+                `./${normalizedPath}`
+            ];
+            
+            loadMarkdownContent(contentElement, sidebarElement, paths);
+        });
+    </script>
+</body>
+</html>

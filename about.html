@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usage Guide - Tutorial Template</title>
+    <meta name="description" content="How to use the tutorial site template with Markdown-powered lessons.">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-title">
+                <a href="index.html" class="nav-title" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+                    Tutorial Template
+                </a>
+            </div>
+            <div class="nav-left">
+                <a href="tutorial.html"><i class="fas fa-book-open"></i> Tutorial Page</a>
+                <a href="about.html" class="active"><i class="fas fa-info-circle"></i> Usage Guide</a>
+            </div>
+        </nav>
+    </header>
+
+    <main style="max-width: 900px; margin: 40px auto; padding: 0 15px;">
+        <h1 style="margin-bottom: 20px; color: var(--primary-color); text-align: center;">Using the Tutorial Template</h1>
+        <p style="margin-bottom: 15px; line-height: 1.8;">
+            This site is a clean starter for publishing tutorials. Content lives in Markdown, the layout is prewired for math and code, and you only need to point the template page at your files.
+        </p>
+
+        <section style="margin: 25px 0;">
+            <h2 style="margin-bottom: 10px; color: var(--primary-dark);">Add a tutorial</h2>
+            <ol style="padding-left: 18px; line-height: 1.7; color: var(--text-light);">
+                <li>Create a folder under <code>content/tutorials/</code> (for example, <code>content/tutorials/getting-started/</code>).</li>
+                <li>Add a Markdown file inside that folder (for example, <code>lesson.md</code>). Images can live in the same folder.</li>
+                <li>Open <code>tutorial.html?title=Getting%20Started&md=content/tutorials/getting-started/lesson.md</code>. The query string tells the page which Markdown file to load.</li>
+                <li>Use <strong>H1</strong>, <strong>H2</strong>, and <strong>H3</strong> headings in your Markdown - the sidebar is generated from them automatically.</li>
+            </ol>
+        </section>
+
+        <section style="margin: 25px 0;">
+            <h2 style="margin-bottom: 10px; color: var(--primary-dark);">Homepage tips</h2>
+            <ul style="padding-left: 18px; line-height: 1.7; color: var(--text-light);">
+                <li>Duplicate a card block in <code>index.html</code> for every tutorial you want to feature.</li>
+                <li>Change the card text and link to a <code>tutorial.html?md=... </code> URL that matches your Markdown file.</li>
+                <li>Use the CSS variables in <code>styles.css</code> to adjust colors and spacing quickly.</li>
+            </ul>
+        </section>
+
+        <section style="margin: 25px 0;">
+            <h2 style="margin-bottom: 10px; color: var(--primary-dark);">Markdown helpers</h2>
+            <p style="color: var(--text-light); line-height: 1.7;">Use these patterns to trigger the built-in styles:</p>
+            <ul style="padding-left: 18px; line-height: 1.7; color: var(--text-light);">
+                <li><strong>Callouts</strong>: start a blockquote with <code>> **Question:**</code>, <code>> **Tip:**</code>, or <code>> **Warning:**</code>.</li>
+                <li><strong>Math</strong>: wrap inline math with <code>$...$</code> and block math with <code>$$...$$</code> (MathJax is already configured).</li>
+                <li><strong>Code</strong>: fenced code blocks are highlighted automatically by Highlight.js.</li>
+            </ul>
+        </section>
+
+        <section style="margin: 25px 0;">
+            <h2 style="margin-bottom: 10px; color: var(--primary-dark);">Where to customize</h2>
+            <ul style="padding-left: 18px; line-height: 1.7; color: var(--text-light);">
+                <li><code>styles.css</code>: landing page layout and palette.</li>
+                <li><code>css/tutorial.css</code>: tutorial page layout, sidebar, and typography.</li>
+                <li><code>js/markdown-callback-loader.js</code>: Markdown rendering behavior.</li>
+            </ul>
+        </section>
+
+        <p style="margin-top: 20px; color: var(--text-light); line-height: 1.7;">
+            Need more detail? Check <code>docs/USAGE.md</code> for a fuller walkthrough.
+        </p>
+    </main>
+
+    <footer class="social-footer">
+        <a href="https://github.com/silentdrift" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="mailto:arshiyagharoony@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+    </footer>
+
+    <div class="scroll-top" id="scrollTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+</html>

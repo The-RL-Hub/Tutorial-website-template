@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial Template | RL Hub</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="description" content="A clean tutorial site template. Drop in Markdown files, link them, and publish.">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="nav-title">
+                <a href="index.html" class="nav-title" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+                    Tutorial Template
+                </a>
+            </div>
+            <div class="nav-left">
+                <a href="tutorial.html"><i class="fas fa-book-open"></i> Tutorial Page</a>
+                <a href="about.html"><i class="fas fa-info-circle"></i> Usage Guide</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Ready-to-Fill Tutorial Site</h1>
+        <p class="guide">Start with a blank slate: add Markdown files, point the template page at them, and ship your lessons.</p>
+
+        <div class="section-container">
+            <h2 class="section-title">Start Building</h2>
+            <section class="cards-container">
+                <div class="card">
+                    <div class="card-header">Create your first tutorial</div>
+                    <div class="card-image card-placeholder">Markdown driven</div>
+                    <div class="card-content">
+                        <ul>
+                            <li>Add a <code>.md</code> file under <code>content/tutorials/</code></li>
+                            <li>Open <code>tutorial.html?md=content/tutorials/your-file.md</code></li>
+                            <li>Headings automatically build the sidebar</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <a href="tutorial.html"><i class="fas fa-globe"></i> Open template page</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Shape the landing page</div>
+                    <div class="card-image card-placeholder">Card grid</div>
+                    <div class="card-content">
+                        <ul>
+                            <li>Duplicate cards in <code>index.html</code> to showcase lessons</li>
+                            <li>Swap colors, copy, and icons to match your brand</li>
+                            <li>Link each card to a <code>tutorial.html?md=...</code> URL</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <a href="about.html"><i class="fas fa-pencil-alt"></i> See tips</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Publish &amp; share</div>
+                    <div class="card-image card-placeholder">Fast hosting</div>
+                    <div class="card-content">
+                        <ul>
+                            <li>No build step required - pure HTML, CSS, JS</li>
+                            <li>MathJax + Highlight.js are already wired up</li>
+                            <li>Deploy the static folder anywhere you like</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <a href="docs/USAGE.md"><i class="fas fa-file-alt"></i> Read the full doc</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="section-container">
+            <h2 class="section-title">Reference Pages</h2>
+            <section class="cards-container">
+                <div class="card">
+                    <div class="card-header">Tutorial template</div>
+                    <div class="card-image card-placeholder">Live preview</div>
+                    <div class="card-content">
+                        <ul>
+                            <li>Loads Markdown via query param</li>
+                            <li>Responsive with collapsible sidebar</li>
+                            <li>Ready for math, code, and images</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <a href="tutorial.html"><i class="fas fa-book"></i> View template</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Usage guide</div>
+                    <div class="card-image card-placeholder">Step-by-step</div>
+                    <div class="card-content">
+                        <ul>
+                            <li>Where to place Markdown and media files</li>
+                            <li>How to wire links on the landing page</li>
+                            <li>Markdown patterns for callouts and math</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <a href="about.html"><i class="fas fa-info-circle"></i> Open guide</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div class="scroll-top" id="scrollTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <footer class="social-footer">
+        <a href="https://github.com/silentdrift" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="mailto:arshiyagharoony@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+    </footer>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
