@@ -2,6 +2,17 @@
 
 This sample verifies the complete Markdown rendering path.
 
+## Learning goals and prerequisites
+
+The reader needs basic Python syntax and the meaning of a finite reward sequence. After this lesson, the reader should be able to:
+
+- compute a discounted return with backward recursion;
+- identify the reward order used by the function;
+- test the edge cases $\gamma=0$ and an empty sequence;
+- state that the example calculates a return but does not learn a policy.
+
+The example is intentionally small. It demonstrates lesson structure and renderer behavior, not a full RL chapter.
+
 ## A repeated heading
 
 Inline math looks like $G_t=R_{t+1}+\gamma G_{t+1}$.
