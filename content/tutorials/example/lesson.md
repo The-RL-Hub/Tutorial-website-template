@@ -29,6 +29,12 @@ def discounted_return(rewards, gamma):
     return value
 ~~~
 
+## Worked audit
+
+For `rewards = [1, 2]` and $\gamma=0.5$, the loop first sets the value to $2$, then returns $1+0.5(2)=2$. With $\gamma=0$, only the first reward contributes, so the result is $1$. An empty reward list returns the initialized value $0$.
+
+These three cases check reward order, discount placement, and the empty-input boundary. A lesson using this function should also validate the allowed range of $\gamma$ in production code.
+
 ## A repeated heading
 
 The second heading receives a unique identifier, so both sidebar links work.
