@@ -1,38 +1,41 @@
-# Tutorial Template Usage
+# Tutorial template usage
 
-This repository is a blank, Markdown-first tutorial site. Drop in your lessons, link them to the template page, and ship a static site without a build step.
+## Serve the site
 
-## Quick start
+Run the PowerShell helper or any static HTTP server:
 
-1. Serve the folder (for example, run `start_server.ps1` or use any static server).
-2. Open `index.html` to see the landing page or `tutorial.html` to load a Markdown file.
+    ./start_server.ps1
+
+The Markdown loader uses XHR, so file URLs are not supported.
 
 ## Add a tutorial
 
-1. Create a folder under `content/tutorials/` (for example, `content/tutorials/getting-started/`).
-2. Add your Markdown file inside that folder (for example, `lesson.md`). Keep images next to it and reference them with relative paths like `![Alt text](image.png)`.
-3. Load it with a query string:  
-   `tutorial.html?title=Getting%20Started&md=content/tutorials/getting-started/lesson.md`
-4. Use `#`, `##`, and `###` headings in your Markdown - the sidebar is generated from those headings.
+1. Create a folder under **content/tutorials/**.
+2. Add a Markdown file with a .md extension.
+3. Add images beside that Markdown file or in another intentional site path.
+4. Link the lesson with a URL like:
+
+       tutorial.html?title=Getting%20Started&md=content/tutorials/getting-started/lesson.md
+
+The md parameter cannot leave content/tutorials and cannot load a non-Markdown file.
 
 ## Markdown helpers
 
-- Callouts: start a blockquote with `> **Question:**`, `> **Tip:**`, or `> **Warning:**` to get the built-in boxes.
-- Math: inline math with `$...$`; block math with `$$...$$` (MathJax is already wired up).
-- Code: fenced code blocks with a language hint (for example, ```python) trigger Highlight.js.
+- A blockquote beginning with **Question:**, **Quiz:**, or **Check-in:** becomes a question box.
+- A blockquote beginning with **Tip:**, **Note:**, or **Idea:** becomes a tip box.
+- A blockquote beginning with **Warning:**, **Alert:**, or **Caution:** becomes a warning box.
+- Dollar delimiters render inline and block MathJax equations.
+- Fenced code with a language hint is highlighted.
+- H1-H3 headings appear in the sidebar; repeated headings receive unique IDs.
 
 ## Landing page
 
-- Duplicate a card block in `index.html` for each tutorial you want to feature.
-- Point each card to the correct URL, e.g. `tutorial.html?md=content/tutorials/topic/lesson.md&title=Topic`.
-- Adjust colors and spacing quickly via the CSS variables at the top of `styles.css`.
+Duplicate a card in index.html and point it at the universal tutorial page. Keep the title and Markdown parameters URL-encoded.
 
-## Tutorial page styling
+## Theme
 
-- Global tutorial layout and sidebar styles live in `css/tutorial.css`.
-- To change the accent color, tweak `--primary-color`, `--primary-dark`, and `--primary-light`.
-- The header shows the `title` query string; if none is provided it falls back to "New tutorial."
+The tutorial layout lives in css/tutorial.css. Landing-page styles live in styles.css. Change the primary CSS variables rather than scattering new colors across rules.
 
 ## Deploy
 
-The site is pure HTML, CSS, and JavaScript - no build step. Host the folder on any static hosting provider (GitHub Pages, Netlify, Vercel, S3, etc.).
+The folder is a static site and can be hosted by GitHub Pages or another static host. Preserve the directory structure, serve Markdown with UTF-8, and run the repository checks before deployment.

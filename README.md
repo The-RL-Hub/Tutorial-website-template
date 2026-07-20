@@ -1,27 +1,38 @@
-# Tutorial Site Template
+# Tutorial site template
 
-A clean, static template for publishing tutorials. Content is written in Markdown, rendered on the fly, and styled for math and code without any build step.
-
-## Highlights
-
-- **Markdown driven:** point `tutorial.html` at any `.md` file via the `md` query string.
-- **Ready for STEM:** MathJax for formulas and Highlight.js for code snippets.
-- **Responsive layout:** landing page grid plus a tutorial view with a generated sidebar.
+A small static template for publishing Markdown tutorials with math, code highlighting, callouts, responsive layout, and a generated sidebar.
 
 ## Quick start
 
-1. Serve the folder (run `start_server.ps1` or any static server).
-2. Add a Markdown file under `content/tutorials/` (for example, `content/tutorials/example/lesson.md`).
-3. Open `tutorial.html?title=Example&md=content/tutorials/example/lesson.md` to see it rendered.
-4. Duplicate a card in `index.html` to link to your new tutorial.
+Run:
+
+    ./start_server.ps1
+
+Open the included sample:
+
+    http://127.0.0.1:8090/tutorial.html?title=Example%20lesson&md=content/tutorials/example/lesson.md
+
+The Markdown path is intentionally restricted to files under content/tutorials.
 
 ## Key files
 
-- `index.html` - landing page cards.
-- `tutorial.html` - loads Markdown via `?md=...` and builds the sidebar from headings.
-- `css/tutorial.css` and `styles.css` - styling for the tutorial page and landing page.
-- `js/markdown-callback-loader.js` - Markdown rendering pipeline with callouts and math support.
+- **index.html**: landing-page cards
+- **tutorial.html**: universal tutorial shell and safe query-parameter handling
+- **content/tutorials/example/lesson.md**: executable rendering example
+- **js/markdown-callback-loader.js**: Markdown, callout, heading, code, and math pipeline
+- **js/tutorial.js**: navigation and responsive interactions
+- **css/tutorial.css** and **styles.css**: tutorial and landing-page themes
 
-## Documentation
+## Verification
 
-See `docs/USAGE.md` for step-by-step instructions, Markdown patterns for callouts, and theming tips. 
+    node --check js/markdown-callback-loader.js
+    node --check js/tutorial.js
+    node --check js/mathjax-config.js
+    node --check script.js
+    node tests/check-inline-scripts.js
+    node tests/loader.test.js
+    python tests/check_template.py
+
+Marked and MathJax are pinned to exact versions so a new CDN release cannot silently change the renderer API.
+
+See docs/USAGE.md for content patterns and deployment guidance.
