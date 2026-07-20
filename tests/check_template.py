@@ -67,7 +67,18 @@ def main() -> None:
                 missing.append(f"{page.name} -> {reference}")
 
     assert not missing, "Missing local references:\n" + "\n".join(missing)
-    assert (ROOT / "content/tutorials/example/lesson.md").exists()
+    lesson_path = ROOT / "content/tutorials/example/lesson.md"
+    assert lesson_path.exists()
+    lesson = lesson_path.read_text(encoding="utf-8")
+    for heading in (
+        "## Learning goals and prerequisites",
+        "## Worked audit",
+        "## Assumptions and common mistakes",
+        "## Summary",
+        "## Exercises",
+        "## Primary sources",
+    ):
+        assert heading in lesson, f"Example lesson omits {heading}"
 
     tutorial = (ROOT / "tutorial.html").read_text(encoding="utf-8")
     assert "marked@15.0.12/marked.min.js" in tutorial
