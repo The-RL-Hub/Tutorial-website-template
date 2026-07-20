@@ -48,4 +48,17 @@ The second heading receives a unique identifier, so both sidebar links work.
 - This return is one sample, not an expected value or a value-function estimate.
 - A truncated sequence may omit future rewards and should not be described as a completed episode.
 
+## Summary
+
+Backward recursion computes a finite discounted return in one pass. Its interpretation depends on reward order, the discount, and the reason the sequence ended.
+
+## Exercises
+
+1. Compute the return of `[2, -1, 3]` for $\gamma=0.9$ by hand.
+2. Add input validation for the discount and test both invalid boundaries.
+3. Compare a terminal sequence with a sequence stopped by an external step limit.
+4. Write a test that would fail if rewards were processed in forward order.
+
+An answer is checkable when it states the reward order, discount, expected number, and end condition.
+
 > **Warning:** Serve the site over HTTP; browser security rules usually block local XHR from file URLs.
