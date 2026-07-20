@@ -24,6 +24,28 @@ class ReferenceParser(HTMLParser):
                 self.references.append(value)
 
 
+def check_text_encoding() -> None:
+    markers = tuple(
+        chr(codepoint)
+        for codepoint in (0xFFFD, 0xC3, 0xC2, 0xD8, 0xD9)
+    )
+    markers += (chr(0xE2) + chr(0x20AC),)
+    suffixes = {".html", ".md", ".css", ".js", ".py"}
+    failures: list[str] = []
+
+    for path in ROOT.rglob("*"):
+        if not path.is_file() or path.suffix.lower() not in suffixes:
+            continue
+        text = path.read_text(encoding="utf-8")
+        found = [marker for marker in markers if marker in text]
+        if found:
+            failures.append(f"{path.relative_to(ROOT)}: {found}")
+
+    assert not failures, "Possible text encoding corruption:\n" + "\n".join(
+        failures
+    )
+
+
 def main() -> None:
     missing: list[str] = []
     for page in ROOT.glob("*.html"):
@@ -52,6 +74,7 @@ def main() -> None:
     assert "mathjax@3.2.2/es5/tex-mml-chtml.js" in tutorial
     assert "normalizedPath.startsWith('content/tutorials/')" in tutorial
     assert "!pathParts.includes('..')" in tutorial
+    check_text_encoding()
     print("PASS template integrity checks")
 
 
