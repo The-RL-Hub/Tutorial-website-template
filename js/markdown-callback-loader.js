@@ -13,7 +13,7 @@
 
 const MarkdownCallbackLoader = (function() {
     // Private variables
-    const VERSION = '1.1.0';
+    const VERSION = '2.0.0';
     let contentCache = {};
     let markedInitialized = false;
     
@@ -34,24 +34,9 @@ const MarkdownCallbackLoader = (function() {
         
         // Configure marked options
         marked.setOptions({
-            gfm: true,              // GitHub Flavored Markdown
-            breaks: true,           // Convert line breaks to <br>
-            pedantic: false,
-            sanitize: false,        // Allow HTML in source
-            smartLists: true,
-            smartypants: true,      // Pretty quotes, ellipses, etc.
-            langPrefix: 'language-',
-            highlight: function(code, lang) {
-                // Use highlight.js for code syntax highlighting if available
-                if (window.hljs && lang && hljs.getLanguage(lang)) {
-                    try {
-                        return hljs.highlight(lang, code).value;
-                    } catch (e) {
-                        console.error('Error highlighting code:', e);
-                    }
-                }
-                return code;
-            }
+            gfm: true,
+            breaks: true,
+            pedantic: false
         });
         
         // Set up custom renderers
@@ -70,58 +55,52 @@ const MarkdownCallbackLoader = (function() {
     function configureCustomRenderers() {
         const renderer = new marked.Renderer();
         
-        // Custom image renderer to add the image-container class
+        // Marked v13+ passes token objects to renderer methods. Keep the
+        // implementation on that documented API and pin Marked in the page.
         const originalImageRenderer = renderer.image;
-        renderer.image = function(href, title, text) {
-            const img = originalImageRenderer.call(this, href, title, text);
-            // Return just the image without adding a caption - captions are handled in the Markdown directly
+        renderer.image = function(token) {
+            const img = originalImageRenderer.call(this, token);
             return `<div class="image-container">${img}</div>`;
         };
         
         // Custom blockquote renderer to support special boxes
         const originalBlockquoteRenderer = renderer.blockquote;
-        renderer.blockquote = function(quote) {
-            // Ensure quote is a string and handle safely
-            if (typeof quote !== 'string') {
-                console.warn('Blockquote received non-string input:', quote);
-                return originalBlockquoteRenderer.call(this, quote);
-            }
-            
+        renderer.blockquote = function(token) {
             try {
-                const normalized = quote.toLowerCase();
-                
-                if (normalized.indexOf('<strong>question') !== -1 || 
-                    normalized.indexOf('<strong>quiz') !== -1 || 
-                    normalized.indexOf('<strong>check-in') !== -1) {
-                    return `<div class="box box-question">${quote}</div>`;
-                } 
-                else if (normalized.indexOf('<strong>tip') !== -1 || 
-                         normalized.indexOf('<strong>note') !== -1 || 
-                         normalized.indexOf('<strong>idea') !== -1) {
-                    return `<div class="box box-tip">${quote}</div>`;
+                const boxType = classifyCallout(token.text || '');
+                if (boxType) {
+                    const quoteHtml = this.parser.parse(token.tokens);
+                    return `<div class="box box-${boxType}" role="note">${quoteHtml}</div>\n`;
                 }
-                else if (normalized.indexOf('<strong>warning') !== -1 || 
-                         normalized.indexOf('<strong>alert') !== -1 || 
-                         normalized.indexOf('<strong>caution') !== -1) {
-                    return `<div class="box box-warning">${quote}</div>`;
-                }
-                else {
-                    // Default blockquote
-                    return originalBlockquoteRenderer.call(this, quote);
-                }
+                return originalBlockquoteRenderer.call(this, token);
             } catch (error) {
                 console.error('Error in blockquote renderer:', error);
-                return originalBlockquoteRenderer.call(this, quote);
+                return originalBlockquoteRenderer.call(this, token);
             }
         };
-        
-        // Custom paragraph renderer to prevent $ and $$ from being processed incorrectly
-        const originalParagraphRenderer = renderer.paragraph;
-        renderer.paragraph = function(text) {
-            return originalParagraphRenderer.call(this, text);
-        };
-        
+
         return renderer;
+    }
+
+    function classifyCallout(text) {
+        const normalized = text
+            .replace(/[*_:]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toLowerCase();
+
+        const types = {
+            question: ['question', 'quiz', 'check-in'],
+            tip: ['tip', 'note', 'idea'],
+            warning: ['warning', 'alert', 'caution']
+        };
+
+        for (const [type, labels] of Object.entries(types)) {
+            if (labels.some(label => normalized.startsWith(label))) {
+                return type;
+            }
+        }
+        return null;
     }
     
     /**
@@ -183,10 +162,22 @@ const MarkdownCallbackLoader = (function() {
      * Generate an ID from a heading text for use in navigation
      */
     function generateIdFromHeading(text) {
-        return text
+        const id = text
             .toLowerCase()
             .replace(/[^\w\u0600-\u06FF\s]/g, '') // Keep Persian characters
+            .trim()
             .replace(/\s+/g, '-');
+        return id || 'section';
+    }
+
+    function createHeadingIdAllocator() {
+        const counts = new Map();
+        return function allocateHeadingId(text) {
+            const baseId = generateIdFromHeading(text);
+            const count = counts.get(baseId) || 0;
+            counts.set(baseId, count + 1);
+            return count === 0 ? baseId : `${baseId}-${count + 1}`;
+        };
     }
     
     /**
@@ -297,6 +288,10 @@ const MarkdownCallbackLoader = (function() {
             
             // Apply post-processing
             applyPostProcessing(contentElement);
+
+            document.dispatchEvent(new CustomEvent('tutorial:content-rendered', {
+                detail: { contentElement }
+            }));
             
         } catch (error) {
             showError(contentElement, 'Error rendering Markdown: ' + error.message);
@@ -311,7 +306,7 @@ const MarkdownCallbackLoader = (function() {
         // Apply syntax highlighting to code blocks
         if (window.hljs) {
             contentElement.querySelectorAll('pre code').forEach(block => {
-                hljs.highlightBlock(block);
+                hljs.highlightElement(block);
             });
         }
         
@@ -326,8 +321,7 @@ const MarkdownCallbackLoader = (function() {
             }
         };
 
-        if (window.MathJax && window.MathJax.startup && window.MathJax.startup.typesetPromise) {
-            // MathJax already initialised
+        if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
             typeset();
         } else {
             // Wait until MathJax signals it is ready
@@ -335,10 +329,9 @@ const MarkdownCallbackLoader = (function() {
         }
         
         // Add IDs to headings for navigation (if they don't already have one)
+        const allocateHeadingId = createHeadingIdAllocator();
         contentElement.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(heading => {
-            if (!heading.id) {
-                heading.id = generateIdFromHeading(heading.textContent);
-            }
+            heading.id = allocateHeadingId(heading.textContent);
         });
         
         // Handle images - ensure they have loading="lazy"
@@ -358,14 +351,15 @@ const MarkdownCallbackLoader = (function() {
             return;
         }
         
-        const headingRegex = /^(#{1,4})\s+(.+?)(?:\n|\r|$)/gm;
+        const headingRegex = /^(#{1,6})\s+(.+?)(?:\n|\r|$)/gm;
         const headings = [];
+        const allocateHeadingId = createHeadingIdAllocator();
         let match;
         
         while ((match = headingRegex.exec(markdown)) !== null) {
             const level = match[1].length; // Number of # characters
             const text = match[2].trim();
-            const id = generateIdFromHeading(text);
+            const id = allocateHeadingId(text);
             
             headings.push({ level, text, id });
         }
@@ -411,6 +405,10 @@ const MarkdownCallbackLoader = (function() {
                 }
             });
         });
+
+        document.dispatchEvent(new CustomEvent('tutorial:sidebar-rendered', {
+            detail: { sidebarElement }
+        }));
     }
     
     /**
@@ -433,11 +431,21 @@ const MarkdownCallbackLoader = (function() {
         generateSidebar: function(markdown, sidebarElement) {
             generateSidebar(markdown, sidebarElement);
         },
-        clearCache: clearCache
+        clearCache: clearCache,
+        testing: {
+            classifyCallout,
+            createHeadingIdAllocator
+        }
     };
 })();
 
 // Auto-initialize when the DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded, Markdown Callback Loader ready');
-}); 
+if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM loaded, Markdown Callback Loader ready');
+    });
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = MarkdownCallbackLoader;
+}

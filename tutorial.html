@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/github.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js" defer></script>
 </head>
 <body>
@@ -41,16 +41,16 @@
     </button>
     
     <footer class="social-footer">
-        <a href="https://github.com/silentdrift" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="https://github.com/The-RL-Hub" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
         <a href="mailto:arshiyagharoony@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
     </footer>
 
-    <div class="scroll-top" id="scrollTop">
+    <div class="scroll-top" id="scrollTop" role="button" tabindex="0" aria-label="Scroll to top">
         <i class="fas fa-arrow-up"></i>
     </div>
     
     <script src="js/mathjax-config.js"></script>
-    <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
     <script src="js/markdown-callback-loader.js"></script>
     <script src="js/tutorial.js"></script>
     
@@ -63,7 +63,7 @@
             
             const markdownPath = params.get('md');
             const pageTitle = params.get('title') || 'New tutorial';
-            const normalizedPath = markdownPath ? markdownPath.replace(/^\\.\\//, '') : '';
+            const normalizedPath = markdownPath ? markdownPath.replace(/^\.\//, '') : '';
 
             if (titleEl) {
                 titleEl.textContent = pageTitle;
@@ -80,6 +80,25 @@
                 `;
                 if (sidebarElement) {
                     sidebarElement.innerHTML = '<div class="sidebar-loading">Add headings (H1-H3) to your Markdown to populate the sidebar.</div>';
+                }
+                return;
+            }
+
+            const pathParts = normalizedPath.split('/');
+            const isAllowedMarkdownPath =
+                normalizedPath.startsWith('content/tutorials/') &&
+                normalizedPath.endsWith('.md') &&
+                !pathParts.includes('..') &&
+                !normalizedPath.includes('\\');
+
+            if (!isAllowedMarkdownPath) {
+                contentElement.innerHTML =
+                    '<div class="error">' +
+                    '<h2>Invalid tutorial path</h2>' +
+                    '<p>The <strong>md</strong> parameter must point to a Markdown file under <strong>content/tutorials/</strong>.</p>' +
+                    '</div>';
+                if (sidebarElement) {
+                    sidebarElement.innerHTML = '<div class="sidebar-loading">No tutorial loaded.</div>';
                 }
                 return;
             }

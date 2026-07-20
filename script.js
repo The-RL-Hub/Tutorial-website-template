@@ -21,16 +21,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // Debounced scroll handler
     const handleScroll = debounce(() => {
         // Toggle visibility of back-to-top button
-        if (window.scrollY > 300) {
+        if (scrollTopButton && window.scrollY > 300) {
             scrollTopButton.classList.add('visible');
-        } else {
+        } else if (scrollTopButton) {
             scrollTopButton.classList.remove('visible');
         }
 
         // Toggle compact header styling
-        if (window.scrollY > 40) {
+        if (header && window.scrollY > 40) {
             header.classList.add('scrolled');
-        } else {
+        } else if (header) {
             header.classList.remove('scrolled');
         }
     }, 100);
@@ -39,12 +39,16 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener('scroll', handleScroll);
     
     // Scroll to top when button is clicked
-    scrollTopButton.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+    if (scrollTopButton) {
+        const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+        scrollTopButton.addEventListener('click', scrollToTop);
+        scrollTopButton.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                scrollToTop();
+            }
         });
-    });
+    }
     
     // Add active state to navigation links
     const navLinks = document.querySelectorAll('.nav-left a');
