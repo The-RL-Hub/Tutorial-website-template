@@ -1,0 +1,33 @@
+name: Template quality
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check JavaScript syntax
+        run: |
+          node --check js/markdown-callback-loader.js
+          node --check js/tutorial.js
+          node --check js/mathjax-config.js
+          node --check script.js
+          node tests/check-inline-scripts.js
+      - name: Test renderer helpers
+        run: node tests/loader.test.js
+      - name: Check template integrity
+        run: python tests/check_template.py
