@@ -61,4 +61,11 @@ Backward recursion computes a finite discounted return in one pass. Its interpre
 
 An answer is checkable when it states the reward order, discount, expected number, and end condition.
 
+## Primary sources
+
+- Sutton and Barto, [Reinforcement Learning: An Introduction](http://incompleteideas.net/book/RLbook2020.pdf), for return notation and value definitions.
+- Gymnasium, [Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/), for the distinction between task termination and external truncation.
+
+The source note names which claim each link supports. New lessons should follow the same pattern instead of adding an unexplained link list.
+
 > **Warning:** Serve the site over HTTP; browser security rules usually block local XHR from file URLs.
