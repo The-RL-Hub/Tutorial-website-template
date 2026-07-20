@@ -39,4 +39,13 @@ These three cases check reward order, discount placement, and the empty-input bo
 
 The second heading receives a unique identifier, so both sidebar links work.
 
+## Assumptions and common mistakes
+
+- Rewards are ordered from earliest to latest.
+- The function assumes a finite sequence.
+- A discount outside $[0,1]$ needs an explicit task-specific reason and validation.
+- Reversing the sequence twice changes the return definition.
+- This return is one sample, not an expected value or a value-function estimate.
+- A truncated sequence may omit future rewards and should not be described as a completed episode.
+
 > **Warning:** Serve the site over HTTP; browser security rules usually block local XHR from file URLs.
