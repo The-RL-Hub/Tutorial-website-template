@@ -74,6 +74,12 @@ def main() -> None:
     assert "mathjax@3.2.2/es5/tex-mml-chtml.js" in tutorial
     assert "normalizedPath.startsWith('content/tutorials/')" in tutorial
     assert "!pathParts.includes('..')" in tutorial
+
+    usage = (ROOT / "docs/USAGE.md").read_text(encoding="utf-8")
+    assert "## Lesson verification" in usage
+    assert "termination" in usage and "truncation" in usage
+    assert "encoding check" in usage
+
     check_text_encoding()
     print("PASS template integrity checks")
 
